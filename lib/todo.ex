@@ -19,16 +19,34 @@ defmodule TodoList do
 
   @spec new() :: map
   def new do
-    %{}
+    MultiDict.new()
   end
 
   @spec add_entry(map, any, any) :: map
   def add_entry(todo_list, date, title) do
-    Map.update(todo_list, date, [title], fn titles -> [title | titles] end)
+    MultiDict.add(todo_list, date, title)
   end
 
   @spec entries(map, any) :: any
   def entries(todo_list, date) do
+    MultiDict.get(todo_list, date)
+  end
+end
+
+defmodule MultiDict do
+  @spec new() :: map
+  def new do
+    %{}
+  end
+
+  @spec add(map, any, any) :: map
+  def add(todo_list, date, title) do
+    Map.update(todo_list, date, [title],  &[title | &1])
+  end
+
+  @spec get(map, any) :: any
+  def get(todo_list, date) do
     Map.get(todo_list, date, [])
   end
+
 end
